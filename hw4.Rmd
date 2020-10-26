@@ -1,0 +1,203 @@
+---
+title: "HW4 - Markov chain Monte Carlo"
+author: "Your name"
+date: "Date of submission"
+output: 
+html_document: 
+highlight: tango
+theme: spacelab
+---
+
+```{r setup, include = FALSE}
+# DO NOT ALTER CODE IN THIS CHUNK
+
+# Note: if you have not yet installed the relevant packages, 
+# you'll need to install them with the code below
+# install.packages("tidyverse")
+# install.packages("glue")
+
+library(tidyverse)
+library(here)
+EPSILON <- .001
+```
+
+* * *
+
+#### Problem 1: 
+
+The exponential function
+```{r exponential}
+exponential <- function(x, lambda = 3) {
+ 
+  # the Exponential distribution is undefined for x < 0, 
+  # so those values should have 0 probability
+  if( x < 0) 
+    return(0)
+  else
+    # define exponential here
+    return(0) # replace this with the right return
+}
+```
+
+#### Problem 2: 
+
+```{r gaussian-proposal}
+# return samples from a Gaussian centered at x
+gaussian_proposal <- function(x, sigma = 1) {
+  
+}
+
+```
+
+#### Problem 3: 
+
+```{r metropolis-exponential}
+m_exponential <- function(target = exponential, proposal = gaussian_proposal, 
+                          iterations = 1000, start = 1) {
+  
+  samples <- rep(start, iterations)
+  ps <- rep(target(start), iterations)
+  
+  for(i in 2:iterations) {
+    current_x <- samples[i - 1]
+    
+    #propose a new x
+    #compute alpha
+    alpha = .5 #replace this line
+    
+    if(runif(1) <= alpha) {
+      # add the new proposed sample to the samples, 
+      # and add it's probability to ps
+    } else{
+      # add the new old sample to the samples again, 
+      # and add it's probability to ps
+    }
+
+  }
+  
+  # return a tidy representation of the samples
+  tibble(iteration = 1:iterations,
+         value = samples, 
+         f = ps)
+}
+
+
+out_exponential <- m_exponential()
+```
+
+```{r plot-exponential}
+
+# look at f(x) over the course of samples
+# look at a histogram of samples. Did you get an exponential?
+```
+
+#### Problem 4: 
+
+```{r dirichlet}
+# define the Beta function
+beta <- function(alpha) {
+
+}
+
+dirichlet <- function(x, alpha = c(.7,.4)) {
+  
+  # Dirichlet is only defined if the alphas are >0, 0 < xs < 1, and sum(xs) = 1 
+  if(any(alpha <= 0) | any(x < 0) | any(x > 1) | (abs(sum(x) - 1)) >= EPSILON)
+    return(0)
+  else
+    # define the Dirichlet distribution
+    return(1) # replace this line
+
+}
+```
+
+```{r delta}
+# return a proposed sample by adding and subtracting to the current sample
+delta_proposal <- function(x, max_value = .2) {
+  
+  # sample a delta uniformly between -max_value and max_value
+  # return (x[1]-delta, x[2]+delta)
+  
+}
+```
+
+#### Problem 5: 
+
+```{r metropolis-dirichlet}
+m_dirichlet <- function(target = dirichlet, proposal = delta_proposal, 
+                        iterations = 1000, start = c(.5,.5)) {
+  
+  samples <- rep(list(start), iterations)
+  ps <- rep(target(start), iterations)
+  
+  for(i in 2:iterations) {
+    current_x <- samples[i - 1]
+    
+    #propose a new x
+    #compute alpha
+    alpha <- .5 # replace this line
+    
+    if(runif(1) <= alpha) {
+      # add the new proposed sample to the samples, 
+      # and add it's probability to ps
+    } else{
+      # add the new old sample to the samples again, 
+      # and add it's probability to ps
+    }
+
+  }
+  
+  # return a tidy representation of the samples
+  tibble(iteration = 1:iterations,
+         value = samples, 
+         f = ps)
+}
+
+
+out_dirichlet <- m_dirichlet(iterations = 1)
+```
+
+```{r plot-dirichlet}
+
+# look at f(x) over the course of samples
+# look at a histogram of the values for both dimensions.
+```
+
+#### Problem 6: 
+
+```{r mystery-samples}
+mystery_samples <- read_csv(here("data/dirichlet_samples.csv")) %>%
+  rowwise() %>%
+  mutate(value = list(c(dim1, dim2))) %>%
+  pull(value)
+```
+
+```{r compound-dirichlet}
+# Compute product of probabilities of all samples given alpha
+compound_dirichlet_prob <- function(samples, alphas) {
+  return (0) #replace this line
+}
+
+# Think about what proposal function makes sense here. 
+# Dirichlet parameters have to be >= 0
+inference_proposal <- function(alphas) {
+
+}
+```
+
+#### Problem 7: 
+```{r infer-dirichlet}
+predict_value <- function(hypotheses, previous_numbers, new_number) {
+  
+}
+```
+
+```{r plot-inferred-dirichlet}
+# look at f(x) over the course of samples
+# look at a histogram of the values for both dimensions.
+
+# compute the mean of the samples for each of the two dimensions. 
+# Are they close to what you should expect? 
+# Hint: The expect value of a Dirichlet distribution on each dimension alpha_i 
+# is alpha_i / sum(alpha)
+```

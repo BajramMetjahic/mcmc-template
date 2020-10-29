@@ -187,9 +187,15 @@ inference_proposal <- function(alphas) {
 
 #### Problem 7: 
 ```{r infer-dirichlet}
-predict_value <- function(hypotheses, previous_numbers, new_number) {
+m_d_inference <- function(target_samples, target, proposal, 
+                           iterations = 5000, 
+                           start = c(1, 1)) {
   
 }
+
+output_inf <- m_d_inference(target_samples = mystery_samples, 
+                           target = compound_dirichlet_prob, 
+   proposal = inference_proposal)
 ```
 
 ```{r plot-inferred-dirichlet}
